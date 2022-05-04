@@ -46,9 +46,23 @@ const promptUser = () => {
         },
 
         {
+            type: 'confirm',
+            name: 'confirmAbout',
+            message: 'Would you like to enter some information about yourself for an "About" section?',
+            default: true
+        },
+
+        {
             type: 'input',
             name: 'about',
-            message: 'Provide some information about yourself:'
+            message: 'Provide some information about yourself:',
+            when: ({ confirmAbout }) => {
+                if (confirmAbout) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }
     ])
 };
@@ -84,7 +98,7 @@ const promptProject = portfolioData => {
                 if (descriptionInput) {
                     return true;
                 } else {
-                    console.log('Please enter your name!');
+                    console.log('Please enter your project\'s description!');
                     return false;
                 }
             }
@@ -100,7 +114,7 @@ const promptProject = portfolioData => {
             name: 'link',
             message: 'Enter the GitHub link to your project. (Required)',
             validate: linkInput => {
-                if (linkeInput) {
+                if (linkInput) {
                     return true;
                 } else {
                     console.log('Please enter your GitHub link!');
@@ -121,14 +135,14 @@ const promptProject = portfolioData => {
             default: false
         }
     ])
-    .then(projectData => {
-        portfolioData.projects.push(projectData);
-        if (projectData.confirmAddProject) {
-            return promptProject(portfolioData);
-        } else {
-            return portfolioData;
-        }
-    });
+        .then(projectData => {
+            portfolioData.projects.push(projectData);
+            if (projectData.confirmAddProject) {
+                return promptProject(portfolioData);
+            } else {
+                return portfolioData;
+            }
+        });
 };
 
 promptUser()
